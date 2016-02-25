@@ -1,0 +1,18 @@
+enabled: true
+name: "Slack Bot for OpenStreetMap"
+description: "This broker listens for changes using augmented diffs and checks against watch lists."
+consumers:
+  - backend: http
+    url_source: "http://overpass-api.de/api/augmented_diff"
+    url_max: "http://overpass-api.de/api/augmented_diff_status"
+    codec: xml
+    topic: ""
+    topic_check: false
+    it_type: LATEST
+producers:
+  - backend: slack
+    codec: slack
+    topic: test  # The topic to reply back to.  Broker code overrides this and responds to where the mssage came from.
+    topic_check: false
+    # Slack API doesn't support bot's joining channels automatically.
+    # Need to manualy do /invite @botname in channel UI.
