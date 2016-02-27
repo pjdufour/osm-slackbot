@@ -29,7 +29,6 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
         for m in messages:
             print m
 
-
     def __init__(self, name, description, templates=None, duplex=None, consumers=None, producers=None, stores_out=None, filter_metadata=None, sleep_period=5, count=1, timeout=5, deduplicate=False, ignore_errors=True, verbose=False):  # noqa
         super(OSMSlackBotBroker_OSMDiffs, self).__init__(
             name,

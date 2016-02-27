@@ -1,6 +1,7 @@
 enabled: true
 name: "Slack Bot for OpenStreetMap"
 description: "This broker listens for changes using augmented diffs and checks against watch lists."
+sleep_period: 20
 consumers:
   - backend: http
     url_source: "http://overpass-api.de/api/augmented_diff"
