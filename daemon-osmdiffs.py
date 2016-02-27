@@ -3,7 +3,7 @@ import yaml
 from geowatchutil.runtime import build_broker_kwargs
 
 from osmslackbot import settings
-from osmslackbot.broker.base import OSMSlackBotBroker_OSMDiffs
+from osmslackbot.broker.broker_osmdiffs import OSMSlackBotBroker_OSMDiffs
 from osmslackbot.utils import load_templates
 
 verbose = False

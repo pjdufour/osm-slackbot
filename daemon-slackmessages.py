@@ -3,7 +3,7 @@ import yaml
 from geowatchutil.runtime import build_broker_kwargs
 
 from osmslackbot import settings
-from osmslackbot.broker.base import OSMSlackBotBroker_SlackMessages
+from osmslackbot.broker.broker_slackmessages import OSMSlackBotBroker_SlackMessages
 from osmslackbot.utils import load_templates
 
 verbose = False
