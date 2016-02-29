@@ -104,18 +104,21 @@ class OSMSlackBotBroker(GeoWatchBroker):
 
         response = request.read()
         root = et.fromstring(response)
+        return _flatten_node(nodeID, root.find('node'))
+
+    def _flatten_node(self, nodeID, node):
 
         kwargs = {
             'id': nodeID
         }
-        for node in root.findall('node'):
-            kwargs['user'] = node.get('user')
-            kwargs['timestamp'] = node.get('timestamp')
-            kwargs['changeset'] = node.get('changeset')
-            kwargs['lon'] = node.get('lon')
-            kwargs['lat'] = node.get('lat')
-            for tag in node.findall('tag'):
-                kwargs[tag.get('k')] = tag.get('v', '')
+
+        kwargs['user'] = node.get('user')
+        kwargs['timestamp'] = node.get('timestamp')
+        kwargs['changeset'] = node.get('changeset')
+        kwargs['lon'] = node.get('lon')
+        kwargs['lat'] = node.get('lat')
+        for tag in node.findall('tag'):
+            kwargs[tag.get('k')] = tag.get('v', '')
 
         return GeoWatchMappingNode().forward(**kwargs)
 

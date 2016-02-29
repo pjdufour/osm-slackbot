@@ -3,6 +3,8 @@ import re
 
 import defusedxml.ElementTree as et
 
+from pymongo import MongoClient
+
 from geowatchutil.broker.base import GeoWatchBroker
 from geowatchutil.codec.geowatch_codec_slack import GeoWatchCodecSlack
 
@@ -26,8 +28,30 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
         pass
 
     def _post(self, messages=None):
+
+        client = MongoClient(settings.MONGODB_HOST, settings.MONGODB_PORT)
+        db = client[settings.MONGODB_DB]
+        collection = db[settings.MONGODB_COLLECTION_WATCHLIST]
+        watchlist = collection.find()
+
+        outgoing_messages = []
+
         for m in messages:
-            print m
+            for actions in m.findall('action'):
+                if action.get('type') == "create":
+                    for node in action.findall('node'):
+                        nodeID = node.get('id')
+                        tags = [(tag.get('k') + "=" + tag.get('v','')) for tag in node.findall('tag')]
+                        if 'amenity=cafe' in tags:
+                            ctx = self._flatten_nodes(nodeID, node)
+                            t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
+                            if t:
+                                outgoing_messages.append(self.codec_slack.render(ctx, t=t))
+        if outgoing_messages:
+            for outgoing in outgoing_messages:
+                print "Sending message ..."
+                print "+ Data = ", outgoing
+                self.producers[0]._channel.send_message(outgoing, topic='test')
 
     def __init__(self, name, description, templates=None, duplex=None, consumers=None, producers=None, stores_out=None, filter_metadata=None, sleep_period=5, count=1, timeout=5, deduplicate=False, ignore_errors=True, verbose=False):  # noqa
         super(OSMSlackBotBroker_OSMDiffs, self).__init__(

@@ -67,3 +67,4 @@ supervisord.log
 supervisord.pid
 osmslackbot.log
 osmslackbot/local_settings.py
+scratch.txt

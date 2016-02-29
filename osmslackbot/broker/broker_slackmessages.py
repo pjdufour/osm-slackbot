@@ -1,8 +1,6 @@
 import json
 import re
 
-import defusedxml.ElementTree as et
-
 from geowatchutil.broker.base import GeoWatchBroker
 from geowatchutil.codec.geowatch_codec_slack import GeoWatchCodecSlack
 

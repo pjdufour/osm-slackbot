@@ -13,6 +13,12 @@ GEOWATCH_STOPWORDS = [
     "-bot"
 ]
 
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+MONGODB_DB = 'geowatch'
+
+MONGODB_COLLECTION_WATCHLIST = 'geowatch-watchlist'
+
 try:
     from local_settings import *  # noqa
 except ImportError:
