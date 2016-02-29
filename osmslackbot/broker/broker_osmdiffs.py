@@ -37,7 +37,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
         outgoing_messages = []
 
         for m in messages:
-            for actions in m.findall('action'):
+            for action in m.findall('action'):
                 if action.get('type') == "create":
                     for node in action.findall('node'):
                         nodeID = node.get('id')
