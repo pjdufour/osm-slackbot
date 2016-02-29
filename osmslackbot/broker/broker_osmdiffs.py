@@ -42,7 +42,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                     for node in action.findall('node'):
                         nodeID = node.get('id')
                         tags = [(tag.get('k') + "=" + tag.get('v','')) for tag in node.findall('tag')]
-                        if 'amenity=cafe' in tags:
+                        if 'amenity=restaurant' in tags:
                             ctx = self._flatten_nodes(nodeID, node)
                             t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
                             if t:
