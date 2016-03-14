@@ -63,6 +63,7 @@ target/
 
 
 # OSM Slack Bot
+supervisord.conf  # managed by ansible
 supervisord.log
 supervisord.pid
 osmslackbot.log
