@@ -49,6 +49,25 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                             t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
                             if t:
                                 outgoing_messages.append(self.codec_slack.render(ctx, t=t))
+
+                    for way in action.findall('way'):
+                        wayID = way.get('id')
+                        tags = [(tag.get('k') + "=" + tag.get('v','')) for tag in way.findall('tag')]
+                        if len(osm_tags_set & set(tags)) > 0:
+                            ctx = self._flatten_way(wayID, way)
+                            t = self.templates.get('SLACK_MESSAGE_TEMPLATE_WAY', None)
+                            if t:
+                                outgoing_messages.append(self.codec_slack.render(ctx, t=t))
+
+                    for relation in action.findall('relation'):
+                        relationID = relation.get('id')
+                        tags = [(tag.get('k') + "=" + tag.get('v','')) for tag in relation.findall('tag')]
+                        if len(osm_tags_set & set(tags)) > 0:
+                            ctx = self._flatten_relation(relationID, relation)
+                            t = self.templates.get('SLACK_MESSAGE_TEMPLATE_RELATION', None)
+                            if t:
+                                outgoing_messages.append(self.codec_slack.render(ctx, t=t))
+
         if outgoing_messages:
             for outgoing in outgoing_messages[1:5]:
                 print "Sending message ..."

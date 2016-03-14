@@ -132,18 +132,21 @@ class OSMSlackBotBroker(GeoWatchBroker):
 
         response = request.read()
         root = et.fromstring(response)
+        return _flatten_way(wayID, root.find('way'))
+
+    def _flatten_way(self, wayID, way):
 
         kwargs = {
             'id': wayID
         }
-        for way in root.findall('way'):
-            kwargs['user'] = way.get('user')
-            kwargs['timestamp'] = way.get('timestamp')
-            kwargs['changeset'] = way.get('changeset')
-            kwargs['visible'] = way.get('visible')
-            for tag in way.findall('tag'):
-                kwargs[tag.get('k')] = tag.get('v', '')
-            kwargs['nodes'] = [node.get('ref', None) for node in way.findall('nd')]
+
+        kwargs['user'] = way.get('user')
+        kwargs['timestamp'] = way.get('timestamp')
+        kwargs['changeset'] = way.get('changeset')
+        kwargs['visible'] = way.get('visible')
+        for tag in way.findall('tag'):
+            kwargs[tag.get('k')] = tag.get('v', '')
+        kwargs['nodes'] = [node.get('ref', None) for node in way.findall('nd')]
 
         return GeoWatchMappingWay().forward(**kwargs)
 
@@ -157,17 +160,18 @@ class OSMSlackBotBroker(GeoWatchBroker):
 
         response = request.read()
         root = et.fromstring(response)
+        return _flatten_relation(relationID, root.find('relation'))
 
+    def _flatten_relation(self, relationID, relation):
         kwargs = {
             'id': relationID
         }
-        for relation in root.findall('relation'):
-            kwargs['user'] = relation.get('user')
-            kwargs['timestamp'] = relation.get('timestamp')
-            kwargs['changeset'] = relation.get('changeset')
-            for tag in relation.findall('tag'):
-                kwargs[tag.get('k')] = tag.get('v', '')
-            kwargs['ways'] = [member.get('ref', None) for member in relation.findall('member') if member.get('type', '') == 'way']
+        kwargs['user'] = relation.get('user')
+        kwargs['timestamp'] = relation.get('timestamp')
+        kwargs['changeset'] = relation.get('changeset')
+        for tag in relation.findall('tag'):
+            kwargs[tag.get('k')] = tag.get('v', '')
+        kwargs['ways'] = [member.get('ref', None) for member in relation.findall('member') if member.get('type', '') == 'way']
 
         return GeoWatchMappingRelation().forward(**kwargs)
 

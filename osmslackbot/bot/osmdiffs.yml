@@ -5,6 +5,7 @@ sleep_period: 15
 osm_tags:
   - "amenity=restaurant"
   - "amenity=cafe"
+  - "amenity=fuel"
 consumers:
   - backend: http
     url_source: "http://overpass-api.de/api/augmented_diff"
