@@ -20,6 +20,7 @@ broker_kwargs = build_broker_kwargs(
     verbose=verbose)
 broker_kwargs["templates"] = templates
 broker_kwargs["ignore_errors"] = True  # Set to False to raise errors and break execution
+broker_kwargs['osm_tags'] = broker_config['osm_tags']
 
 broker = OSMSlackBotBroker_OSMDiffs(
     broker_config.get('name', None),

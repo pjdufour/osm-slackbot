@@ -1,7 +1,10 @@
 enabled: true
 name: "Slack Bot for OpenStreetMap"
 description: "This broker listens for changes using augmented diffs and checks against watch lists."
-sleep_period: 20
+sleep_period: 15
+osm_tags:
+  - "amenity=restaurant"
+  - "amenity=cafe"
 consumers:
   - backend: http
     url_source: "http://overpass-api.de/api/augmented_diff"
@@ -10,10 +13,13 @@ consumers:
     topic: ""
     topic_check: false
     it_type: LATEST
+    it_id: 1822506
 producers:
   - backend: slack
     codec: slack
     topic: test  # The topic to reply back to.  Broker code overrides this and responds to where the mssage came from.
     topic_check: false
+    limit_outgoing: 2 # Limit of 2 outgoing messages per cycle
+    overflow: 'keep' # 'keep', 'drop'
     # Slack API doesn't support bot's joining channels automatically.
     # Need to manualy do /invite @botname in channel UI.

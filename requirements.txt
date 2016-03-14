@@ -9,3 +9,4 @@ slackclient
 git+git://github.com/geowatch/geowatch-util@master
 pyyaml
 defusedxml
+unidecode

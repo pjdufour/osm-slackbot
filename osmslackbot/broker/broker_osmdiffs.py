@@ -21,6 +21,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
     """
     _user_id = None  # Dervied from consumer authtoken
     _user_name = None  # Dervied from consumer authtoken
+    osm_tags = None
     patterns = None
     _ignore_errors = True
 
@@ -28,6 +29,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
         pass
 
     def _post(self, messages=None):
+        osm_tags_set = set(self.osm_tags)
 
         client = MongoClient(settings.MONGODB_HOST, settings.MONGODB_PORT)
         db = client[settings.MONGODB_DB]
@@ -42,18 +44,34 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                     for node in action.findall('node'):
                         nodeID = node.get('id')
                         tags = [(tag.get('k') + "=" + tag.get('v','')) for tag in node.findall('tag')]
-                        if 'amenity=restaurant' in tags:
-                            ctx = self._flatten_nodes(nodeID, node)
+                        if len(osm_tags_set & set(tags)) > 0:
+                            ctx = self._flatten_node(nodeID, node)
                             t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
                             if t:
                                 outgoing_messages.append(self.codec_slack.render(ctx, t=t))
         if outgoing_messages:
-            for outgoing in outgoing_messages:
+            for outgoing in outgoing_messages[1:5]:
                 print "Sending message ..."
                 print "+ Data = ", outgoing
-                self.producers[0]._channel.send_message(outgoing, topic='test')
+                self.producers[0]._channel.send_message(outgoing, topic='#test')
 
-    def __init__(self, name, description, templates=None, duplex=None, consumers=None, producers=None, stores_out=None, filter_metadata=None, sleep_period=5, count=1, timeout=5, deduplicate=False, ignore_errors=True, verbose=False):  # noqa
+    def __init__(
+        self,
+        name,
+        description,
+        osm_tags=None,
+        templates=None,
+        duplex=None,
+        consumers=None,
+        producers=None,
+        stores_out=None,
+        filter_metadata=None,
+        sleep_period=5,
+        count=1,
+        timeout=5,
+        deduplicate=False,
+        ignore_errors=True,
+        verbose=False):  # noqa
         super(OSMSlackBotBroker_OSMDiffs, self).__init__(
             name,
             description,
@@ -70,6 +88,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
 
         self.templates = templates  # loaded from templates.yml
         self._ignore_errors = ignore_errors
+        self.osm_tags = osm_tags
         self._user_id = self.producers[0]._client._user_id
         self._user_name = self.producers[0]._client._user_name
 
