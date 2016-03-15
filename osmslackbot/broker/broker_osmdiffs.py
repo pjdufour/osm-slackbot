@@ -69,7 +69,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                                 outgoing_messages.append(self.codec_slack.render(ctx, t=t))
 
         if outgoing_messages:
-            for outgoing in outgoing_messages[1:5]:
+            for outgoing in outgoing_messages[0:5]:
                 print "Sending message ..."
                 print "+ Data = ", outgoing
                 self.producers[0]._channel.send_message(outgoing, topic='#test')

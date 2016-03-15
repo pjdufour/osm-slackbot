@@ -6,6 +6,9 @@ osm_tags:
   - "amenity=restaurant"
   - "amenity=cafe"
   - "amenity=fuel"
+ratelimit:
+  daily: 20
+  hour: 5
 consumers:
   - backend: http
     url_source: "http://overpass-api.de/api/augmented_diff"
@@ -24,3 +27,8 @@ producers:
     overflow: 'keep' # 'keep', 'drop'
     # Slack API doesn't support bot's joining channels automatically.
     # Need to manualy do /invite @botname in channel UI.
+    buffer_type: 'mongodb'
+    buffer_db_host: 'localhost'
+    buffer_db_port: 27017
+    buffer_db_name: 'osmslackbot'
+    buffer_db_collection: 'messages_outgoing'

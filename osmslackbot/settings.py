@@ -15,9 +15,9 @@ GEOWATCH_STOPWORDS = [
 
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
-MONGODB_DB = 'geowatch'
+MONGODB_DB = 'osmslackbot'
 
-MONGODB_COLLECTION_WATCHLIST = 'geowatch-watchlist'
+MONGODB_COLLECTION_WATCHLIST = 'watchlist'
 
 try:
     from local_settings import *  # noqa
