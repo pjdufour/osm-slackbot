@@ -1,6 +1,7 @@
 {% extends "response/base.yml" %}
 {% block title_link %}
     title_link: "{{ url_way_view }}"
+{% endblock %}
 {% block fields %}
     fields:
       - title: "View Way"
