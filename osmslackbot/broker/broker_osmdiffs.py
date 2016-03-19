@@ -1,8 +1,10 @@
 import json
 import re
+import yaml
 
 import defusedxml.ElementTree as et
 
+from jinja2 import Environment, PackageLoader
 from pymongo import MongoClient
 
 from geowatchutil.broker.base import GeoWatchBroker
@@ -19,6 +21,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
     """
     Broker for OpenStreetMap Slack bot that processes OSM Diffs
     """
+    env = None  # Jinja2 Environment
     _user_id = None  # Dervied from consumer authtoken
     _user_name = None  # Dervied from consumer authtoken
     osm_tags = None
@@ -48,9 +51,11 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                             print node.get('user'), ': ', tags
                         if len(osm_tags_set & set(tags)) > 0:
                             ctx = self._flatten_node(nodeID, node)
-                            t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
-                            if t:
-                                outgoing_messages.append(self.codec_slack.render(ctx, t=t))
+                            t = self.env.get_template("response/node/create.yml")
+                            outgoing_messages.append(yaml.load(t.render(** ctx)))
+                            #t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
+                            #if t:
+                            #    outgoing_messages.append(self.codec_slack.render(ctx, t=t))
 
                     for way in action.findall('way'):
                         wayID = way.get('id')
@@ -62,7 +67,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                             t = self.templates.get('SLACK_MESSAGE_TEMPLATE_WAY', None)
                             if t:
                                 outgoing_messages.append(self.codec_slack.render(ctx, t=t))
-                     
+
                     for relation in action.findall('relation'):
                         relationID = relation.get('id')
                         tags = [(tag.get('k') + "=" + tag.get('v','')) for tag in relation.findall('tag')]
@@ -75,10 +80,11 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                                 outgoing_messages.append(self.codec_slack.render(ctx, t=t))
 
         if outgoing_messages:
-            for outgoing in outgoing_messages[0:5]:
+            for outgoing in outgoing_messages:
                 print "Sending message ..."
                 print "+ Data = ", outgoing
-                self.producers[0]._channel.send_message(outgoing, topic='#test')
+                #self.producers[0]._channel.send_message(outgoing, topic='#test')
+                self.producers[0]._channel.send_message(outgoing, topic=None)
 
     def __init__(
         self,
@@ -120,3 +126,5 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
         self.codec_slack = GeoWatchCodecSlack()
 
         self.patterns = load_patterns()
+
+        self.env = Environment(loader=PackageLoader('osmslackbot', 'templates'))

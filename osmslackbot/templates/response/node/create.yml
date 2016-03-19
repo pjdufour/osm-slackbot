@@ -1,0 +1,7 @@
+{% extends "response/node/base.yml" %}
+{% block fallback %}
+    fallback: At {{ date }}, user {{ user }} created OSM Node {{ node }} ({{ name }}) at ({{ lat }} {{ lon }}) as part of changeset {{ changeset }}."
+{% endblock %}
+{% block text %}
+    text:  "At *{{ date }}*, user <{{ url_user_view }}|{{ user }}> created OSM Node <{{ url_node_view }}|{{ node }}> _{{ name }}_ at *({{ lat }} {{ lon }})* as part of changeset <{{ url_changeset_view }}|{{ changeset }}>."
+{% endblock %}

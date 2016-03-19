@@ -1,0 +1,23 @@
+attachments:
+  - title: "{{ title }}"
+    title_link: "{{ url_node_view }}"
+{% block fallback %}
+    fallback: "OSM Node {{ node }} ({{ name }}) at ({{ lat }} {{ lon }}) was last edited by {{ user }} at {{ date }} as part of changeset {{ changeset }}."
+{% endblock %}
+{% block text %}
+    text:  "OSM Node <{{ url_node_view }}|{{ node }}> _{{ name }}_ at *({{ lat }} {{ lon }})* was last edited by <{{ url_user_view }}|{{ user }}> at *{{ date }}* as part of changeset <{{ url_changeset_view }}|{{ changeset }}>."
+{% endblock %}
+    color: "#000099"
+    mrkdwn_in: ["text", "pretext"]
+{% block fields %}
+    fields:
+      - title: "View Node"
+        value: "<{{ url_node_view }}|View>"
+        short: true
+      - title: "View Changeset"
+        value: "<{{ url_changeset_view }}|View>"
+        short: true
+      - title: "View User"
+        value: "<{{ url_user_view }}|View>"
+        short: true
+{% endblock %}
