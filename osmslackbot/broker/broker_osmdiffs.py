@@ -84,7 +84,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                 print "Sending message ..."
                 print "+ Data = ", outgoing
                 #self.producers[0]._channel.send_message(outgoing, topic='#test')
-                self.producers[0]._channel.send_message(outgoing, topic=None)
+                self.producers[0]._channel.send_message(outgoing)
 
     def __init__(
         self,
