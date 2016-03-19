@@ -1,0 +1,12 @@
+attachments:
+  - title: "{{ title }}"
+{% block title_link %}
+{% endblock %}
+{% block fallback %}
+{% endblock %}
+{% block text %}
+{% endblock %}
+    color: "#000099"
+    mrkdwn_in: ["text", "pretext"]
+{% block fields %}
+{% endblock %}

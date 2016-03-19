@@ -1,0 +1,7 @@
+{% extends "response/way/base.yml" %}
+{% block fallback %}
+    fallback: At {{date}}, user {{user}} modified OSM way {{way}} ({{name}}) as part of changeset {{changeset}}."
+{% endblock %}
+{% block text %}
+    text:  "At *{{date}}*, user <{{url_user_view}}|{{user}}> modified OSM way <{{url_way_view}}|{{node}}> _{{name}}_ as part of changeset <{{url_changeset_view}}|{{changeset}}>."
+{% endblock %}

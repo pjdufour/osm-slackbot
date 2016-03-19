@@ -51,7 +51,7 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                             print node.get('user'), ': ', tags
                         if len(osm_tags_set & set(tags)) > 0:
                             ctx = self._flatten_node(nodeID, node)
-                            t = self.env.get_template("response/node/create.yml")
+                            t = self.env.get_template("response/node/created.yml")
                             outgoing_messages.append(yaml.load(t.render(** ctx)))
                             #t = self.templates.get('SLACK_MESSAGE_TEMPLATE_NODE', None)
                             #if t:
@@ -64,9 +64,11 @@ class OSMSlackBotBroker_OSMDiffs(OSMSlackBotBroker):
                             print way.get('user'), ': ', tags
                         if len(osm_tags_set & set(tags)) > 0:
                             ctx = self._flatten_way(wayID, way)
-                            t = self.templates.get('SLACK_MESSAGE_TEMPLATE_WAY', None)
-                            if t:
-                                outgoing_messages.append(self.codec_slack.render(ctx, t=t))
+                            t = self.env.get_template("response/way/created.yml")
+                            outgoing_messages.append(yaml.load(t.render(** ctx)))
+                            #t = self.templates.get('SLACK_MESSAGE_TEMPLATE_WAY', None)
+                            #if t:
+                            #    outgoing_messages.append(self.codec_slack.render(ctx, t=t))
 
                     for relation in action.findall('relation'):
                         relationID = relation.get('id')

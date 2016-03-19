@@ -1,10 +1,10 @@
 {% extends "response/base.yml" %}
 {% block title_link %}
-    title_link: "{{ url_node_view }}"
+    title_link: "{{ url_way_view }}"
 {% block fields %}
     fields:
-      - title: "View Node"
-        value: "<{{ url_node_view }}|View>"
+      - title: "View Way"
+        value: "<{{ url_way_view }}|View>"
         short: true
       - title: "View Changeset"
         value: "<{{ url_changeset_view }}|View>"
